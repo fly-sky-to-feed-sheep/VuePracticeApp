@@ -8,7 +8,6 @@
 
 2023/12/28
 
-本来想用来练习vue的项目,顺手练一下JavaScript吧
 
 
 
@@ -17,4 +16,4 @@
 练习的项目原仓库
 
 - 01  [PacktPublishing/Vue-js-2-Web-Development-Projects: Vue js 2 Web Development Projects, published by Packt (github.com)](https://github.com/PacktPublishing/Vue-js-2-Web-Development-Projects)
-- 02 [wesbos/JavaScript30: 30 Day Vanilla JS Challenge (github.com)](https://github.com/wesbos/JavaScript30/tree/master)
+
