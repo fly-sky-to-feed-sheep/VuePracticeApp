@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns="http://www.w3.org/1999/html">
 <head>
     <meta charset="UTF-8">
     <title>Typora-f</title>
@@ -7,23 +7,40 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <script src="https://unpkg.com/marked"></script>
-    <script src="https://cdn.jsdelivr.net/npm/vue@2.7.14/dist/vue.js"></script>
+<script src="https://unpkg.com/marked"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue@2.7.14/dist/vue.js"></script>
 
 
-    <!--笔记本应用-->
-    <div id="notebook">
+<!--笔记本应用-->
+<div id="notebook">
+
+    <!--侧边栏-->
+    <aside class="side-bar">
+        <div class="toolbar">
+            <!--Google 的 Material Icons 字体库-->
+            <button @click="addNote"><i class="material-icons">add</i> Add note</button>
+        </div>
+        <div class="notes">
+            <div class="note"
+                 v-for="note in notes"
+                 :class="{ selected: note.id === selectedId }"
+                 @click="selectNote(note)">
+                {{ note.title }}
+            </div>
+        </div>
+    </aside>
+    <template v-if="selectedNote">
         <!--主面板-->
         <section class="main">
-            <textarea v-model="content"></textarea>
+            <textarea v-model="selectedNote.content"></textarea>
         </section>
         <aside class="preview" v-html="notePreview"></aside>
-    </div>
-    <script src="script.js"></script>
+    </template>
+</div>
+<script src="script.js"></script>
 </body>
 <script>
     const html = marked.marked('**bold**');
     console.log(html);
-
 </script>
 </html>
