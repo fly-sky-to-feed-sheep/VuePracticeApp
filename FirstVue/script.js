@@ -4,9 +4,8 @@ new Vue({
 
     data(){
         return{
-            content: localStorage.getItem('content')||'fake typora',
-            notes:[],
-            selectedId: null,
+            notes:JSON.parse(localStorage.getItem('notes'))|| [],
+            selectedId: localStorage.getItem('selected-id') || null,
         }
     },
     computed:{
@@ -17,10 +16,47 @@ new Vue({
         {
             return this.notes.find(note => note.id === this.selectedId) || { content: '' };
         },
+        sortedNotes(){
+            return this.notes.slice()
+                .sort((a,b) => a.created -b.created)
+                .sort((a,b) => (a.favorite === b.favorite) ? 0
+                    : a.favorite ? -1
+                    : 1)
+        },
+        formattedCreatedDate() {
+            if (this.selectedNote && this.selectedNote.created) {
+                return moment(this.selectedNote.created).format('YYYY-MM-DD HH:mm:ss');
+            }
+            return '';
+        },
+        linesCount(){
+            if (this.selectedNote){
+                return this.selectedNote.content.split(/\r\n|\r|\n/).length
+            }
+        },
+        wordsCount(){
+            if(this.selectedNote){
+                var s = this.selectedNote.content
+                s = s.replace(/\n/g, ' ')
+                s = s.replace(/(^\s*)|(\s*$)/gi, '')
+                s = s.replace(/\s\s+/gi, ' ')
+                return s.split(' ').length
+            }
+        },
+        charatersCount(){
+            if(this.selectedNote){
+                return this.selectedNote.content.split('').length
+            }
+        },
     },
     watch:{
         content:{
             handler: 'saveNote',
+            deep: true,
+        },
+        notes: 'saveNotes',
+        selectedId(val){
+            localStorage.setItem('selected-id',val)
         },
     },
     methods:{
@@ -45,6 +81,33 @@ new Vue({
         },
         selectNote(note) {
             this.selectedId = note.id;
+        },
+        saveNotes(){
+            localStorage.setItem('notes', JSON.stringify(this.notes))
+            console.log('Notes saved!', new Date())
+        },
+        updateNoteContent(newContent) {
+            const selectedNote = this.notes.find(note => note.id === this.selectedId);
+            if (selectedNote) {
+                selectedNote.content = newContent;
+                this.saveNotes();
+            }
+        },
+        removeNote(){
+            if(this.selectedNote && confirm(' Delete the note? '))
+            {
+                const index = this.notes.indexOf(this.selectedNote)
+                if (index !== -1){
+                    this.notes.splice(index,1)
+                }
+            }
+        },
+        favoriteNote() {
+            const selectedNote = this.notes.find(note => note.id === this.selectedId);
+            if (selectedNote) {
+                selectedNote.favorite = !selectedNote.favorite;
+                this.saveNotes();
+            }
         },
     },
 

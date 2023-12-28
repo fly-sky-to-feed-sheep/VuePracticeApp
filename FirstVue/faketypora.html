@@ -1,12 +1,14 @@
 <!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/html">
+<html lang="en" >
 <head>
     <meta charset="UTF-8">
     <title>Typora-f</title>
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
     <link rel="stylesheet" href="style.css">
+
 </head>
 <body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
 <script src="https://unpkg.com/marked"></script>
 <script src="https://cdn.jsdelivr.net/npm/vue@2.7.14/dist/vue.js"></script>
 
@@ -18,13 +20,14 @@
     <aside class="side-bar">
         <div class="toolbar">
             <!--Google 的 Material Icons 字体库-->
-            <button @click="addNote"><i class="material-icons">add</i> Add note</button>
+            <button @click="addNote"><span class="material-symbols-outlined">add</span></button>
         </div>
         <div class="notes">
             <div class="note"
-                 v-for="note in notes"
+                 v-for="note in sortedNotes"
                  :class="{ selected: note.id === selectedId }"
                  @click="selectNote(note)">
+                    <span class="material-symbols-outlined" v-if="note.favorite">favorite</span>
                 {{ note.title }}
             </div>
         </div>
@@ -32,9 +35,34 @@
     <template v-if="selectedNote">
         <!--主面板-->
         <section class="main">
-            <textarea v-model="selectedNote.content"></textarea>
+            <div class="toolbar">
+                <input v-model="selectedNote.title" placeholder="Note title" >
+                <button @click="favoriteNote" title="Favorite note">
+                    <span class="material-symbols-outlined" :class="{ 'favorite': selectedNote.favorite }">favorite</span>
+                </button>
+                <button @click="removeNote" title="Remove note"><span class="material-symbols-outlined">delete</span></button>
+            </div>
+            <div class="content-container"> <!-- 新增的容器 -->
+                <textarea :value="selectedNote.content" @input="updateNoteContent($event.target.value)"></textarea>
+                <aside class="preview" v-html="notePreview"></aside>
+            </div>
+                <div class="toolbar status-bar">
+                <span class="data">
+                    <span class="label">Created</span>
+                    <span class="value">{{ formattedCreatedDate }}</span>
+                </span>
+                <span class="data">
+                    <span class="label">Words</span>
+                    <span class="value">{{ wordsCount }}</span>
+                </span>
+                <span class="data">
+                    <span class="label">Characters</span>
+                    <span class="value">{{ charatersCount }}</span>
+                </span>
+
+            </div>
         </section>
-        <aside class="preview" v-html="notePreview"></aside>
+
     </template>
 </div>
 <script src="script.js"></script>
