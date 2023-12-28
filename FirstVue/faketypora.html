@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Typora-f</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <script src="https://unpkg.com/marked"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.7.14/dist/vue.js"></script>
+
+
+    <!--笔记本应用-->
+    <div id="notebook">
+        <!--主面板-->
+        <section class="main">
+            <textarea v-model="content"></textarea>
+        </section>
+        <aside class="preview" v-html="notePreview"></aside>
+    </div>
+    <script src="script.js"></script>
+</body>
+<script>
+    const html = marked.marked('**bold**');
+    console.log(html);
+
+</script>
+</html>
